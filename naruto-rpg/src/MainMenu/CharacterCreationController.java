@@ -91,7 +91,7 @@ public class CharacterCreationController implements Initializable {
         VBox.setVgrow(headerLabel, Priority.NEVER);
 
         // Make summary list text larger
-        summaryList.setStyle("-fx-font-size: 16px;");
+        summaryList.setStyle("-fx-font-size: 20px;");
 
         // button handlers
         confirmButton.setOnAction(e -> handleConfirm());
@@ -116,7 +116,7 @@ public class CharacterCreationController implements Initializable {
             ComboBox<String> cb = new ComboBox<>();
             cb.setPrefWidth(200);  // tighter width
             cb.setPrefHeight(40);
-            cb.setStyle("-fx-font-size: 18px;");
+            cb.setStyle("-fx-font-size: 20px;");
             cb.setPromptText("Nature " + i);
             cb.getItems().setAll(ALL_NATURES);
             cb.valueProperty().addListener((o,oldV,newV) ->
