@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +29,7 @@ public class CharacterCreationController implements Initializable {
     @FXML private ComboBox<Integer> chakraCountBox;
     @FXML private VBox              chakraTypesContainer;
     @FXML private RadioButton       jinchYes, jinchNo;
-    @FXML private ComboBox<String>  jinchurikiBox;
+    @FXML private ComboBox<TailedBeasts> jinchurikiBox;
     @FXML private Button            confirmButton, backButton;
 
     // —— internal state ——
@@ -41,19 +43,7 @@ public class CharacterCreationController implements Initializable {
     private static final List<String> ALL_NATURES = List.of(
             "Fire", "Water", "Earth", "Wind", "Lightning"
     );
-    private static final List<String> ALL_BEASTS = List.of(
-            "Shukaku – One‑Tail (Wind & Earth)",
-            "Matabi – Two‑Tails (Fire)",
-            "Isobu – Three‑Tails (Water & Yin)",
-            "Son Goku – Four‑Tails (Fire & Earth)",
-            "Kokuo – Five‑Tails (Fire & Water)",
-            "Saiken – Six‑Tails (Fire & Earth)",
-            "Chomei – Seven‑Tails (Wind & Bug)",
-            "Gyuki – Eight‑Tails (Lightning)",
-            "Kurama (Yang) – Nine‑Tails (Fire, Wind & Yang)",
-            "Kurama (Yin)  – Nine‑Tails (Fire, Wind & Yin)",
-            "Complete Kurama (Locked) – Nine‑Tails (Fire, Wind, Yin & Yang)"
-    );
+    private static final TailedBeasts[] ALL_BEASTS = TailedBeasts.getAllTailedBeasts();
 
     @Override
     public void initialize(URL loc, ResourceBundle rb) {
@@ -79,6 +69,9 @@ public class CharacterCreationController implements Initializable {
         jinchurikiBox.getItems().setAll(ALL_BEASTS);
         jinchurikiBox.setVisible(false);
         jinchurikiBox.setManaged(false);
+        
+        // Add image tooltips to tailed beasts
+        setupTailedBeastTooltips();
         jinchGroup.selectedToggleProperty().addListener((o,oldT,newT) -> {
             boolean show = (newT == jinchYes);
             jinchurikiBox.setVisible(show);
@@ -129,6 +122,72 @@ public class CharacterCreationController implements Initializable {
         refreshNatureOptions();
     }
 
+    /** Sets up image tooltips for the tailed beast dropdown */
+    private void setupTailedBeastTooltips() {
+        jinchurikiBox.setCellFactory(listView -> new ListCell<TailedBeasts>() {
+            private final ImageView imageView = new ImageView();
+            private final Tooltip tooltip = new Tooltip();
+            
+            @Override
+            protected void updateItem(TailedBeasts beast, boolean empty) {
+                super.updateItem(beast, empty);
+                
+                if (empty || beast == null) {
+                    setText(null);
+                    setTooltip(null);
+                } else {
+                    setText(beast.toString());
+                    
+                    // Set up tooltip with image if available
+                    if (beast.getImage() != null) {
+                        imageView.setImage(beast.getImage());
+                        imageView.setFitWidth(150);
+                        imageView.setFitHeight(150);
+                        imageView.setPreserveRatio(true);
+                        tooltip.setGraphic(imageView);
+                        tooltip.setText(beast.getDescription());
+                        tooltip.setShowDelay(Duration.millis(300));
+                        setTooltip(tooltip);
+                    } else {
+                        // Just text tooltip if no image
+                        setTooltip(new Tooltip(beast.getDescription()));
+                    }
+                }
+            }
+        });
+        
+        // Also set up tooltip for the button part of the ComboBox
+        jinchurikiBox.setButtonCell(new ListCell<TailedBeasts>() {
+            private final ImageView imageView = new ImageView();
+            private final Tooltip tooltip = new Tooltip();
+            
+            @Override
+            protected void updateItem(TailedBeasts beast, boolean empty) {
+                super.updateItem(beast, empty);
+                
+                if (empty || beast == null) {
+                    setText(null);
+                    setTooltip(null);
+                } else {
+                    setText(beast.toString());
+                    
+                    if (beast.getImage() != null) {
+                        imageView.setImage(beast.getImage());
+                        imageView.setFitWidth(150);
+                        imageView.setFitHeight(150);
+                        imageView.setPreserveRatio(true);
+                        tooltip.setGraphic(imageView);
+                        tooltip.setText(beast.getDescription());
+                        tooltip.setShowDelay(Duration.millis(300));
+                        setTooltip(tooltip);
+                    } else {
+                        setTooltip(new Tooltip(beast.getDescription()));
+                    }
+                }
+            }
+        });
+    }
+
     /** prevents duplicate natures across dropdowns */
     private void refreshNatureOptions() {
         List<String> chosen = chakraSelectors.stream()
@@ -156,7 +215,8 @@ public class CharacterCreationController implements Initializable {
         List<String> natures = chakraSelectors.stream()
                 .map(ComboBox::getValue).toList();
         boolean isJinch = jinchYes.isSelected();
-        String beast = isJinch ? jinchurikiBox.getValue() : "None";
+        String beast = isJinch && jinchurikiBox.getValue() != null ? 
+                jinchurikiBox.getValue().getDescription() : "None";
 
         // multiplayer flow
         if (totalPlayers > 1) {
@@ -172,14 +232,17 @@ public class CharacterCreationController implements Initializable {
             );
 
             // filter out used beasts
-            Set<String> used = createdPlayers.stream()
+            Set<String> usedDescriptions = createdPlayers.stream()
                     .map(p -> p.bested)
                     .collect(Collectors.toSet());
-            var allowed = ALL_BEASTS.stream()
-                    .filter(b -> !used.contains(b))
+            var allowedBeasts = Arrays.stream(ALL_BEASTS)
+                    .filter(b -> !usedDescriptions.contains(b.getDescription()))
                     .collect(Collectors.toList());
-            jinchurikiBox.getItems().setAll(allowed);
-            if (!allowed.contains(beast)) {
+            jinchurikiBox.getItems().setAll(allowedBeasts);
+            
+            // Clear selection if current beast is no longer available
+            if (jinchurikiBox.getValue() != null && 
+                !allowedBeasts.contains(jinchurikiBox.getValue())) {
                 jinchurikiBox.setValue(null);
             }
         }
