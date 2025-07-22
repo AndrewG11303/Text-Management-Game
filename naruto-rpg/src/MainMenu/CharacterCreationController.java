@@ -147,10 +147,13 @@ public class CharacterCreationController implements Initializable {
                         tooltip.setGraphic(imageView);
                         tooltip.setText(beast.getDescription());
                         tooltip.setShowDelay(Duration.millis(300));
+                        tooltip.setHideDelay(Duration.INDEFINITE); // Never auto-hide
                         setTooltip(tooltip);
                     } else {
                         // Just text tooltip if no image
-                        setTooltip(new Tooltip(beast.getDescription()));
+                        Tooltip textTooltip = new Tooltip(beast.getDescription());
+                        textTooltip.setHideDelay(Duration.INDEFINITE);
+                        setTooltip(textTooltip);
                     }
                 }
             }
@@ -179,9 +182,12 @@ public class CharacterCreationController implements Initializable {
                         tooltip.setGraphic(imageView);
                         tooltip.setText(beast.getDescription());
                         tooltip.setShowDelay(Duration.millis(300));
+                        tooltip.setHideDelay(Duration.INDEFINITE); // Never auto-hide
                         setTooltip(tooltip);
                     } else {
-                        setTooltip(new Tooltip(beast.getDescription()));
+                        Tooltip textTooltip = new Tooltip(beast.getDescription());
+                        textTooltip.setHideDelay(Duration.INDEFINITE);
+                        setTooltip(textTooltip);
                     }
                 }
             }
