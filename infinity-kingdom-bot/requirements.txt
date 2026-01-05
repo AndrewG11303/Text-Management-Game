@@ -1,0 +1,34 @@
+# Infinity Kingdom Bot - Dependencies
+# Install with: pip install -r requirements.txt
+
+# Screen capture and image processing
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+mss>=9.0.0
+
+# Input automation
+pyautogui>=0.9.54
+pynput>=1.7.6
+
+# Android automation (for mobile emulators)
+pure-python-adb>=0.3.0
+
+# OCR for text recognition
+pytesseract>=0.3.10
+easyocr>=1.7.0
+
+# Configuration and utilities
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Scheduling
+schedule>=1.2.0
+APScheduler>=3.10.0
+
+# GUI (optional, for control panel)
+tkinter-tooltip>=2.1.0
+
+# Logging and debugging
+colorlog>=6.7.0
+rich>=13.5.0

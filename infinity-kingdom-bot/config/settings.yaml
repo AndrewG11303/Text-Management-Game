@@ -1,0 +1,183 @@
+# Infinity Kingdom Bot Configuration
+# Edit these settings to customize the bot behavior
+
+# ============================================
+# DEVICE SETTINGS
+# ============================================
+device:
+  # Type: 'emulator' (BlueStacks, LDPlayer, etc.) or 'adb' (Android device)
+  type: "emulator"
+  
+  # Window name for emulator (used for screen capture)
+  window_name: "BlueStacks"
+  
+  # ADB settings (if using ADB connection)
+  adb:
+    host: "127.0.0.1"
+    port: 5555
+  
+  # Screen resolution (will be auto-detected if not set)
+  resolution:
+    width: 1920
+    height: 1080
+
+# ============================================
+# GAME COORDINATES
+# ============================================
+# These are relative positions (0.0 - 1.0) of screen dimensions
+# Adjust based on your screen/emulator resolution
+coordinates:
+  # Main screen buttons
+  main_screen:
+    castle: [0.5, 0.5]
+    world_map: [0.95, 0.85]
+    alliance: [0.85, 0.95]
+    inventory: [0.15, 0.95]
+    quests: [0.05, 0.5]
+    events: [0.95, 0.15]
+    mail: [0.05, 0.15]
+    chat: [0.05, 0.85]
+  
+  # Resource buildings (relative to castle view)
+  buildings:
+    farm_1: [0.3, 0.4]
+    farm_2: [0.35, 0.45]
+    lumber_mill_1: [0.7, 0.4]
+    lumber_mill_2: [0.65, 0.45]
+    iron_mine_1: [0.3, 0.6]
+    stone_quarry_1: [0.7, 0.6]
+    barracks: [0.5, 0.35]
+    academy: [0.4, 0.3]
+    hospital: [0.6, 0.3]
+    watchtower: [0.5, 0.25]
+    wall: [0.5, 0.15]
+  
+  # Common UI elements
+  ui:
+    close_button: [0.95, 0.05]
+    confirm_button: [0.5, 0.7]
+    cancel_button: [0.3, 0.7]
+    collect_all: [0.5, 0.85]
+    back_button: [0.05, 0.05]
+    speed_up: [0.7, 0.7]
+    free_speed: [0.5, 0.6]
+  
+  # Battle/Combat
+  battle:
+    march_button: [0.8, 0.9]
+    attack_button: [0.5, 0.85]
+    scout_button: [0.3, 0.85]
+    rally_button: [0.7, 0.85]
+    troop_select: [0.5, 0.5]
+    immortal_slots:
+      slot_1: [0.2, 0.3]
+      slot_2: [0.4, 0.3]
+      slot_3: [0.6, 0.3]
+      slot_4: [0.8, 0.3]
+
+# ============================================
+# TIMING SETTINGS (in seconds)
+# ============================================
+timing:
+  # Delays between actions
+  click_delay: 0.3
+  action_delay: 1.0
+  screen_load_delay: 2.0
+  animation_delay: 1.5
+  
+  # Task intervals (in minutes)
+  resource_collection_interval: 30
+  quest_check_interval: 15
+  mail_check_interval: 60
+  alliance_help_interval: 10
+  free_chest_interval: 5
+  
+  # Cooldowns
+  march_cooldown: 300  # 5 minutes
+  building_check_cooldown: 60
+  
+  # Randomization (adds random delay to seem more human)
+  random_delay_min: 0.1
+  random_delay_max: 0.5
+
+# ============================================
+# TASK SETTINGS
+# ============================================
+tasks:
+  # Enable/disable specific tasks
+  enabled:
+    collect_resources: true
+    collect_mail: true
+    alliance_help: true
+    free_chests: true
+    daily_quests: true
+    auto_battle: false
+    gather_resources: true
+    train_troops: true
+    research: true
+    build_upgrade: true
+  
+  # Resource gathering priorities
+  gathering:
+    priority: ["gold", "food", "wood", "iron", "gems"]
+    max_marches: 3
+    min_troops: 10000
+  
+  # Training settings
+  training:
+    troop_type: "cavalry"  # infantry, cavalry, archer, mage
+    batch_size: 100
+    auto_queue: true
+  
+  # Battle settings
+  battle:
+    target_types: ["gnome", "rebel", "resource_tile"]
+    max_gnome_level: 10
+    auto_heal: true
+    min_army_power: 50000
+
+# ============================================
+# SAFETY SETTINGS
+# ============================================
+safety:
+  # Maximum runtime (hours, 0 = unlimited)
+  max_runtime_hours: 8
+  
+  # Pause conditions
+  pause_on_attack: true
+  pause_on_low_troops: true
+  min_troops_threshold: 5000
+  
+  # Resource protection
+  protect_resources: true
+  min_gold_reserve: 100000
+  
+  # Anti-detection
+  human_like_delays: true
+  random_click_offset: 5  # pixels
+  
+  # Screenshot on error
+  screenshot_on_error: true
+
+# ============================================
+# LOGGING
+# ============================================
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file_logging: true
+  console_logging: true
+  max_log_files: 10
+  log_screenshots: false
+
+# ============================================
+# NOTIFICATIONS
+# ============================================
+notifications:
+  enabled: false
+  # Discord webhook (optional)
+  discord_webhook: ""
+  # Notify on these events
+  notify_on:
+    - "attack_detected"
+    - "error"
+    - "session_end"
