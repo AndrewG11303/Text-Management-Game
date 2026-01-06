@@ -51,6 +51,7 @@ coordinates:
     hospital: [0.6, 0.3]
     watchtower: [0.5, 0.25]
     wall: [0.5, 0.15]
+    dragon_lair: [0.45, 0.55]  # Dragon lair building
   
   # Common UI elements
   ui:
@@ -116,6 +117,7 @@ tasks:
     train_troops: true
     research: true
     build_upgrade: true
+    dragon_management: true    # Manage dragons with auto speed-up
   
   # Resource gathering priorities
   gathering:
@@ -158,6 +160,85 @@ safety:
   
   # Screenshot on error
   screenshot_on_error: true
+
+# ============================================
+# SPEED-UP SETTINGS
+# ============================================
+speedup:
+  # Enable automatic speed-up usage
+  enabled: true
+  
+  # Default strategy for all targets
+  # Options: never, free_only, conservative, moderate, aggressive, always
+  default_strategy: "moderate"
+  
+  # Building construction speed-ups
+  building:
+    strategy: "moderate"
+    use_if_under_minutes: 5        # Auto-complete if under 5 min
+    max_remaining_seconds: 28800   # Only speed up if under 8 hours
+    prefer_specific_items: true    # Use building speedups first
+    use_universal: true            # Also allow universal speedups
+    max_items_per_use: 10          # Max items per speed-up action
+    daily_limit: 0                 # 0 = unlimited
+  
+  # Research/Technology speed-ups
+  research:
+    strategy: "moderate"
+    use_if_under_minutes: 5
+    max_remaining_seconds: 28800
+    prefer_specific_items: true
+    use_universal: true
+    max_items_per_use: 10
+    daily_limit: 0
+  
+  # Troop training speed-ups
+  training:
+    strategy: "conservative"       # Save training speedups
+    use_if_under_minutes: 3
+    max_remaining_seconds: 3600    # Only speed up if under 1 hour
+    prefer_specific_items: true
+    use_universal: false           # Don't waste universal on training
+    max_items_per_use: 5
+    daily_limit: 20
+  
+  # Hospital healing speed-ups
+  healing:
+    strategy: "aggressive"         # Heal troops fast!
+    use_if_under_minutes: 10
+    max_remaining_seconds: 7200
+    prefer_specific_items: true
+    use_universal: true
+    max_items_per_use: 10
+    daily_limit: 0
+  
+  # Dragon speed-ups
+  dragon_upgrade:
+    strategy: "moderate"
+    use_if_under_minutes: 5
+    max_remaining_seconds: 14400   # 4 hours
+    prefer_specific_items: true
+    use_universal: true
+    max_items_per_use: 10
+    daily_limit: 0
+  
+  dragon_skill:
+    strategy: "moderate"
+    use_if_under_minutes: 5
+    max_remaining_seconds: 7200
+    prefer_specific_items: true
+    use_universal: true
+    max_items_per_use: 10
+    daily_limit: 0
+  
+  dragon_hatching:
+    strategy: "conservative"       # Eggs can wait
+    use_if_under_minutes: 3
+    max_remaining_seconds: 3600
+    prefer_specific_items: true
+    use_universal: false
+    max_items_per_use: 5
+    daily_limit: 5
 
 # ============================================
 # DECISION ENGINE (Smart Upgrade Logic)

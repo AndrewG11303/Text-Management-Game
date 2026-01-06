@@ -21,6 +21,11 @@ from src.tasks.building_tasks import (
     TrainTroopsTask,
     ResearchTask,
 )
+from src.tasks.speedup_tasks import (
+    AutoSpeedUpTask,
+    DragonManagementTask,
+    SpeedUpInventoryTask,
+)
 
 __all__ = [
     'BaseTask',
@@ -35,4 +40,7 @@ __all__ = [
     'BuildingUpgradeTask',
     'TrainTroopsTask',
     'ResearchTask',
+    'AutoSpeedUpTask',
+    'DragonManagementTask',
+    'SpeedUpInventoryTask',
 ]

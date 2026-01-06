@@ -25,6 +25,7 @@ from src.tasks.daily_tasks import (
     DailyQuestsTask, CollectMailTask, AllianceHelpTask, FreeChestTask
 )
 from src.tasks.building_tasks import BuildingUpgradeTask, TrainTroopsTask, ResearchTask
+from src.tasks.speedup_tasks import AutoSpeedUpTask, DragonManagementTask, SpeedUpInventoryTask
 
 
 class BotEngine:
@@ -259,6 +260,43 @@ class BotEngine:
             )
             self.logger.info("  ✓ Building upgrades (every 60 min)")
         
+        # Auto speed-up
+        speedup_config = self.config.get('speedup', {})
+        if speedup_config.get('enabled', True):
+            self.scheduler.add_recurring_task(
+                task_id='auto_speedup',
+                name='Auto Speed-Up',
+                callback=self._run_task,
+                args=(AutoSpeedUpTask(self),),
+                interval_minutes=15,
+                priority=TaskPriority.NORMAL
+            )
+            self.logger.info("  ✓ Auto speed-up (every 15 min)")
+        
+        # Dragon management
+        if tasks_config.get('dragon_management', True):
+            self.scheduler.add_recurring_task(
+                task_id='dragon_management',
+                name='Dragon Management',
+                callback=self._run_task,
+                args=(DragonManagementTask(self),),
+                interval_minutes=30,
+                priority=TaskPriority.NORMAL
+            )
+            self.logger.info("  ✓ Dragon management (every 30 min)")
+        
+        # Speed-up inventory update (less frequent)
+        if speedup_config.get('enabled', True):
+            self.scheduler.add_recurring_task(
+                task_id='speedup_inventory',
+                name='Update Speed-Up Inventory',
+                callback=self._run_task,
+                args=(SpeedUpInventoryTask(self),),
+                interval_minutes=120,  # Every 2 hours
+                priority=TaskPriority.LOW
+            )
+            self.logger.info("  ✓ Speed-up inventory update (every 2 hours)")
+        
         self.logger.info("Task setup complete!")
     
     def _run_task(self, task) -> bool:
@@ -404,6 +442,9 @@ class BotEngine:
             'train_troops': TrainTroopsTask,
             'research': ResearchTask,
             'build_upgrade': BuildingUpgradeTask,
+            'auto_speedup': AutoSpeedUpTask,
+            'dragon_management': DragonManagementTask,
+            'speedup_inventory': SpeedUpInventoryTask,
         }
         
         task_class = task_map.get(task_name)
