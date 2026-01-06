@@ -160,6 +160,39 @@ safety:
   screenshot_on_error: true
 
 # ============================================
+# DECISION ENGINE (Smart Upgrade Logic)
+# ============================================
+decision_engine:
+  # Your playstyle preference
+  # Options: balanced, aggressive, economic, defensive, speedrun
+  playstyle: "balanced"
+  
+  # Weight multipliers for scoring (adjust to your preference)
+  weights:
+    power_gain: 1.0        # How much to value power increases
+    production_gain: 1.0   # How much to value resource production
+    unlock_value: 1.5      # How much to value unlocking new features
+    time_efficiency: 0.8   # Prefer shorter upgrades? (higher = yes)
+    prerequisite_value: 1.2  # Value buildings needed for others
+  
+  # Building priority overrides (optional - empty means use smart logic)
+  # If set, these buildings get boosted priority
+  priority_buildings: []
+  # Example: ["castle", "barracks", "academy"]
+  
+  # Research priority overrides (optional)
+  priority_research: []
+  # Example: ["construction_speed", "gathering_speed"]
+  
+  # Category focus override (0.0 - 2.0, higher = more focus)
+  # Leave empty to use playstyle defaults
+  category_focus:
+    # military: 1.0
+    # economy: 1.0
+    # development: 1.0
+    # defense: 1.0
+
+# ============================================
 # LOGGING
 # ============================================
 logging:
